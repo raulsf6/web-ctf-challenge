@@ -34,11 +34,15 @@ def post_login():
     password = request.form.get('password')
     if password is None: abort(400)
 
-    login_cookie = base64.b64encode(bytes(f"{username};regular_user", 'utf-8')).decode('utf8')
-    response = redirect("/login")
-    response.set_cookie("login_cookie", login_cookie)
+    if username == "R4sp0wn" and password == "Cr3dzz":
+        login_cookie = base64.b64encode(bytes(f"{username};regular_user", 'utf-8')).decode('utf8')
+        response = redirect("/login")
+        response.set_cookie("login_cookie", login_cookie)
+        return response
+    else:
+        error = "Incorrect username or password"
     
-    return response
+    return render_template('login.html', error = error)
 
 @app.get("/admin")
 def admin():
@@ -62,7 +66,7 @@ def admin():
 def decode_cookie(login_cookie):
     decoded_cookie = base64.b64decode(login_cookie).decode('utf8')
     name, role = decoded_cookie.split(";")
-    return name, role 
+    return name, role
 
 if __name__ == "__main__":
     # Only for debugging while developing
