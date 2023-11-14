@@ -9,15 +9,18 @@
 {% endblock %}
 
 {% block content %}
+{% if not logged_in %}
   <div class="d-flex align-items-center py-4">
     <main class="form-signin w-100 m-auto">
-      <form action="" method="post">
+      <form action="{{ url_for('login') }}" class="form-group" method="post">
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
         <div class="form-floating text-black">
           <input
+            type="text"
             class="form-control"
-            id="floatingInput"
+            id="username"
+            name="username"
             placeholder="Username"
           />
           <label for="floatingInput">Username</label>
@@ -26,7 +29,8 @@
           <input
             type="password"
             class="form-control"
-            id="floatingPassword"
+            id="password"
+            name="password"
             placeholder="Password"
           />
           <label for="floatingPassword">Password</label>
@@ -37,6 +41,15 @@
         </button>
       </form>
     </div>
+{% endif %}
 
+{% if logged_in %}
+
+<h1>You are logged in as {{ username }} user</h1>
+<p>You have got a {{ role }} role!</p>
+
+<a href="{{ url_for('logout') }}" class="btn btn-light w-25 py-2"> Logout</a>
+
+{% endif %}
 <!-- TEST USER R4sp0wn:Cr3dzz -->
 {% endblock %}
