@@ -1,5 +1,5 @@
-import sys
-from flask import Flask, abort, make_response, redirect, render_template, render_template_string, request
+import os
+from flask import Flask, abort, redirect, render_template, render_template_string, request, send_file
 import base64
 app = Flask(__name__)
 
@@ -58,11 +58,17 @@ def admin():
     
     is_admin = role == "admin"
 
-    f = open(f'{sys.argv[0]}/../templates/admin.html')
-    admin_template = f.read().replace('admin_name', name)
+    admin_template_path = os.path.join(app.root_path, 'templates', 'admin.html')
+    with open(admin_template_path, 'r') as f:
+        admin_template = f.read().replace('admin_name', name)
 
     return render_template_string(admin_template, is_admin = is_admin)
 
+@app.get("/robots.txt")
+def robots():
+    robots_path = os.path.join(app.static_folder, 'robots.txt')
+    return send_file(robots_path)
+    
 def decode_cookie(login_cookie):
     decoded_cookie = base64.b64decode(login_cookie).decode('utf8')
     name, role = decoded_cookie.split(";")
